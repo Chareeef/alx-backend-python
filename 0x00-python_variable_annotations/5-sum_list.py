@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Type-annotated `to_str` function """
+""" Type-annotated `sum_list` function """
 from functools import reduce
 import typing
 
