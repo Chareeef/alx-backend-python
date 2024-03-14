@@ -1,6 +1,6 @@
-# Python - Variable Annotation
+# Python - Variable Annotations
 
-Hey there! Let's embark dive into the world of Python variable annotation. This README is here to guide us through understanding type annotations in Python 3, how we can elevate our code's readability and maintainability, and how tools like `mypy` can help validate our code. Let's dive right in!
+Hey there! Let's embark dive into the world of Python variable annotations. This README is here to guide us through understanding type annotations in Python 3, how we can elevate our code's readability and maintainability, and how tools like `mypy` can help validate our code. Let's dive right in!
 
 ## Type Annotations in Python 3
 
