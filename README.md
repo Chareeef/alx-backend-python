@@ -4,7 +4,7 @@ Welcome to the ALX Backend Python repository! 🚀
 
 In this repository, I'm embarking on an exciting journey to master the intricacies of backend development using Python. As a software engineering student, I understand the importance of diving deep into advanced concepts to truly excel in the field.
 
-This repository is part of a specialization program where I'll be delving into some of the most advanced concepts Python has to offer. I'll explore topics like:
+This repository is part of the specializations section of the ALX Software Engineering program where I'll be delving into some of the most advanced concepts Python has to offer. I'll explore topics like:
 
 ### Variable Annotation
 Understanding variable annotation is crucial for writing clean, maintainable code. I'll learn how to leverage type hints to make my code more expressive and to catch bugs early on. With variable annotation, I'll take my Python code to the next level of clarity and professionalism.
