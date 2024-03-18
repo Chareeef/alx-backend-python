@@ -16,7 +16,7 @@ async def task_wait_n(n: int, max_delay: int) -> typing.List[float]:
         futures.append(task_wait_random(max_delay))
 
     delays = []
-    
+
     # Collect delays as soon as thay are ready
     for future in asyncio.as_completed(futures):
         delay = await future
