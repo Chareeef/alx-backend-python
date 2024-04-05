@@ -46,3 +46,28 @@ class TestGithubOrgClient(unittest.TestCase):
 
             # Verify that we got the correct payload
             self.assertEqual(res, repos)
+
+    @patch('client.get_json')
+    def test_public_repos(self, mock_get_json):
+        """Test GithubOrgClient.public_repos method"""
+        repos_names = ['Tic_Tac_Toe_Python', 'alx-backend', 'simple_shell']
+        repos = [{'name': name} for name in repos_names]
+
+        mock_get_json.return_value = repos
+
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mock_public_repos_url:
+            mock_public_repos_url.return_value = 'https://github.com/test'
+
+            # Call GithubOrgClient._public_repos_url
+            org_client = GithubOrgClient('test')
+            res1 = org_client.public_repos()
+            res2 = org_client.public_repos()
+
+            # Ensure mocked objects were called once
+            mock_get_json.assert_called_once()
+            mock_public_repos_url.assert_called_once()
+
+            # Verify that we got the correct payload
+            self.assertEqual(res1, res2)
+            self.assertEqual(res1, repos_names)
