@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test client module
+"""Test the Github Org client
 """
 from parameterized import parameterized
 import unittest
@@ -21,14 +21,18 @@ class TestGithubOrgClient(unittest.TestCase):
 
         instance = GithubOrgClient(org_name)
 
-        res = instance.org
-        res = instance.org
+        # Use org property
+        res1 = instance.org
+        res2 = instance.org
 
         url = f'https://api.github.com/orgs/{org_name}'
 
+        # Ensure mocked object was called once with url
         mock_get_json.assert_called_once_with(url)
 
-        self.assertEqual(res, expected_response)
+        # Verify that we got the correct payload
+        self.assertEqual(res1, res2)
+        self.assertEqual(res1, expected_response)
 
     def test_public_repos_url(self):
         """Test GithubOrgClient._public_repos_url method"""
@@ -71,3 +75,14 @@ class TestGithubOrgClient(unittest.TestCase):
             # Verify that we got the correct payload
             self.assertEqual(res1, res2)
             self.assertEqual(res1, repos_names)
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, repo, license_key, expected_response):
+        """Test the GithubOrgClient.has_license static method"""
+
+        # Test has_license with our parameters
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key),
+                         expected_response)
