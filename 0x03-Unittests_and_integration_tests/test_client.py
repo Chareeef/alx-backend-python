@@ -102,8 +102,27 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """Mock requests.get"""
         cls.get_patcher = patch('requests.get').start()
-        cls.get_patcher.return_value.json.side_effect = cls.repos_payload
-    
+        cls.get_patcher.return_value.json.side_effect = [cls.org_payload,
+                                                         cls.repos_payload] * 2
+
+    def test_public_repos(self):
+        """Integration test for GithubOrgClient.public_repos"""
+        test_client = GithubOrgClient('test')
+
+        # Test that we get the correct repos names with public_repos
+        repos = test_client.public_repos()
+        self.assertEqual(repos, self.expected_repos)
+
+    def test_client_with_license(self):
+        """Integration test for GithubOrgClient.public_repos
+        with the argument license="apache-2.0"
+        """
+        test_client = GithubOrgClient('test')
+
+        # Test that we get the correct repos names with public_repos
+        repos = test_client.public_repos(license="apache-2.0")
+        self.assertEqual(repos, self.apache2_repos)
+
     @classmethod
     def tearDownClass(cls):
         """Stop get_patcher"""
