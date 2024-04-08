@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Test the Github Org client
 """
-from parameterized import parameterized
+from fixtures import TEST_PAYLOAD
+from parameterized import parameterized, parameterized_class
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
@@ -86,3 +87,24 @@ class TestGithubOrgClient(unittest.TestCase):
         # Test has_license with our parameters
         self.assertEqual(GithubOrgClient.has_license(repo, license_key),
                          expected_response)
+
+
+@parameterized_class(
+        ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+        [
+            (TEST_PAYLOAD[0][0], TEST_PAYLOAD[0][1],
+             TEST_PAYLOAD[0][2], TEST_PAYLOAD[0][3])
+        ])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for GithubOrgClient class"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Mock requests.get"""
+        cls.get_patcher = patch('requests.get').start()
+        cls.get_patcher.return_value.json.side_effect = cls.repos_payload
+    
+    @classmethod
+    def tearDownClass(cls):
+        """Stop get_patcher"""
+        cls.get_patcher.stop()
