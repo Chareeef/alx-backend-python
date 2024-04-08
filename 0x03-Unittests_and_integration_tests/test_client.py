@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Test the Github Org client
 """
+from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
+import itertools
 from parameterized import parameterized, parameterized_class
 import unittest
 from unittest.mock import patch, PropertyMock
-from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -90,7 +91,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 @parameterized_class(
-        ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+        ('org_payload', 'repos_payload',
+         'expected_repos', 'apache2_repos'),
         [
             (TEST_PAYLOAD[0][0], TEST_PAYLOAD[0][1],
              TEST_PAYLOAD[0][2], TEST_PAYLOAD[0][3])
@@ -101,9 +103,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Mock requests.get"""
+
+        # Start requests.get patcher
         cls.get_patcher = patch('requests.get').start()
-        cls.get_patcher.return_value.json.side_effect = [cls.org_payload,
-                                                         cls.repos_payload] * 2
+
+        # Define and set cyclic payloads
+        cyclic_payloads = itertools.cycle([cls.org_payload,
+                                           cls.repos_payload])
+        cls.get_patcher.return_value.json.side_effect = cyclic_payloads
 
     def test_public_repos(self):
         """Integration test for GithubOrgClient.public_repos"""
@@ -119,8 +126,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         test_client = GithubOrgClient('test')
 
-        # Test that we get the correct repos names with public_repos
-        repos = test_client.public_repos(license="apache-2.0")
+        # Test that we get the names of repos having 'apache-2.0' license
+        repos = test_client.public_repos(license='apache-2.0')
         self.assertEqual(repos, self.apache2_repos)
 
     @classmethod
